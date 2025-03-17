@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小付的个人网页</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 轮播图样式 */
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .side-slideshow {
+            width: 30%;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .left-slideshow {
+            margin-right: 2%;
+        }
+        
+        .right-slideshow {
+            margin-left: 2%;
+        }
+        
+        .side-slides {
+            display: none;
+            width: 100%;
+        }
+        
+        .side-slides img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .side-slides img:hover {
+            transform: scale(1.05);
+        }
+        
+        .main-image {
+            width: 30%;
+            position: relative;
+        }
+        
+        .main-image img {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .main-image img:hover {
+            transform: scale(1.03);
+        }
+        
+        .side-dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .side-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .side-dot.active {
+            background-color: #717171;
+        }
+        
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+        
+        @keyframes fade {
+            from {opacity: .4} 
+            to {opacity: 1}
+        }
+        
+        /* 装饰元素 */
+        .image-decoration {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .top-left {
+            top: -10px;
+            left: -10px;
+        }
+        
+        .top-right {
+            top: -10px;
+            right: -10px;
+        }
+        
+        .bottom-left {
+            bottom: -10px;
+            left: -10px;
+        }
+        
+        .bottom-right {
+            bottom: -10px;
+            right: -10px;
+        }
+        
+        .photo-caption {
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            color: #666;
+        }
+
+        /* 空间入口样式 */
+        .secret-portal {
+            position: relative;
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        
+        .secret-btn {
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #ff7eb9, #8a2be2, #4dc9ff);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .secret-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff5da8, #7a1cb8, #32b3f0);
+        }
+        
+        .secret-text {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.2);
+        }
+        
+        /* 神秘空间样式 */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0;
+            z-index: 9998;
+            display: none;
+            transition: opacity 0.5s;
+        }
+        
+        .secret-space {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid #0f0;
+            color: #0f0;
+            z-index: 9999;
+            display: none;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        
+        .secret-space.active {
+            display: block;
+            animation: glitch 0.3s ease;
+        }
+        
+        .password-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .password-input {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .unlock-btn {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .unlock-btn:hover {
+            background: #0f0;
+            color: black;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(-50%, -50%) skew(0deg); }
+            20% { transform: translate(-50%, -50%) skew(10deg); }
+            40% { transform: translate(-50%, -50%) skew(-10deg); }
+            60% { transform: translate(-50%, -50%) skew(5deg); }
+            80% { transform: translate(-50%, -50%) skew(-5deg); }
+            100% { transform: translate(-50%, -50%) skew(0deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-52%, -50%); }
+            20%, 40%, 60%, 80% { transform: translate(-48%, -50%); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease;
+        }
+        
+        .content-area {
+            display: none;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            margin-top: 20px;
+            border: 1px solid #0f0;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: #0f0;
+            color: black;
+        }
+
+        /* 终端样式 */
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #0f0;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #333;
+        }
+
+        .terminal-window {
+            padding: 20px;
+            height: calc(100% - 40px);
+        }
+
+        .terminal-content {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* 密码输入样式 */
+        .password-input-container {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .prompt {
+            color: #0f0;
+            margin-right: 10px;
+        }
+
+        .password-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-bottom: 2px solid #0f0;
+        }
+
+        /* 标签页样式 */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #0f0;
+            color: black;
+        }
+
+        /* 内容区域样式 */
+        .secret-tab-content {
+            display: none;
+            padding: 20px;
+            height: calc(100% - 100px);
+            overflow-y: auto;
+        }
+
+        .secret-tab-content.active {
+            display: block;
+        }
+
+        /* 文本编辑器样式 */
+        .text-editor {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .text-content {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            resize: none;
+        }
+
+        /* 视频和音频容器样式 */
+        .video-container,
+        .audio-container {
+            height: 100%;
+        }
+
+        .video-input-group,
+        .audio-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .video-list,
+        .audio-list {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+
+        /* 动画效果 */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #0f0;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #0f0; }
+        }
+
+        /* 按钮和输入框通用样式 */
+        button {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #0f0;
+            color: black;
+        }
+
+        input[type="text"] {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border: 1px solid #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="logo">小付</div>
+        <ul class="nav-links">
+            <li><a href="#home">首页</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#portfolio">作品集</a></li>
+            <li><a href="#ai-assistant">AI助手</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <!-- 首页部分 -->
+    <section id="home" class="section">
+        <div class="card">
+            <div class="title-container">
+                <h1>摄影作品集</h1>
+                <div class="title-underline"></div>
+            </div>
+            <p class="subtitle">这里展示我的个人摄影作品和技能</p>
+            <div class="slideshow-container">
+                <div class="image-container">
+                    <!-- 左侧轮播图 -->
+                    <div class="side-slideshow left-slideshow">
+                        <div class="side-slides left-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy.png" alt="左侧图片1">
+                        </div>
+                        <div class="side-slides left-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy 2.png" alt="左侧图片2">
+                        </div>
+                        <div class="side-slides left-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy 3.png" alt="左侧图片3">
+                        </div>
+                        <div class="side-dots">
+                            <span class="side-dot left-dot active" onclick="currentSideSlide(1, 'left')"></span>
+                            <span class="side-dot left-dot" onclick="currentSideSlide(2, 'left')"></span>
+                            <span class="side-dot left-dot" onclick="currentSideSlide(3, 'left')"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- 中间主图片 -->
+                    <div class="main-image">
+                        <div class="image-decoration top-left"></div>
+                        <div class="image-decoration top-right"></div>
+                        <div class="image-decoration bottom-left"></div>
+                        <div class="image-decoration bottom-right"></div>
+                        <img src="image.png" alt="主图片">
+                    </div>
+                    
+                    <!-- 右侧轮播图 -->
+                    <div class="side-slideshow right-slideshow">
+                        <div class="side-slides right-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy 4.png" alt="右侧图片1">
+                        </div>
+                        <div class="side-slides right-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy 5.png" alt="右侧图片2">
+                        </div>
+                        <div class="side-slides right-slides fade">
+                            <img src="C:\Users\Lenovo\Desktop\新建文件夹\image copy 6.png" alt="右侧图片3">
+                        </div>
+                        <div class="side-dots">
+                            <span class="side-dot right-dot active" onclick="currentSideSlide(1, 'right')"></span>
+                            <span class="side-dot right-dot" onclick="currentSideSlide(2, 'right')"></span>
+                            <span class="side-dot right-dot" onclick="currentSideSlide(3, 'right')"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="photo-caption">
+                    <i class="fas fa-camera"></i> 用镜头记录美好瞬间
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于部分 -->
+    <section id="about" class="section">
+        <div class="card">
+            <h2>关于我</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <!-- 个人照片已删除 -->
+                </div>
+                <div class="about-text">
+                    <p>大家好，我是小付。这里是关于我的个人介绍。您可以描述您的背景、技能、兴趣爱好等。</p>
+                    <p>添加更多关于您自己的信息，让访问者更好地了解您。</p>
+                    <div class="skills">
+                        <h3>技能</h3>
+                        <div class="skill-bars">
+                            <div class="skill">
+                                <span>HTML/CSS</span>
+                                <div class="skill-bar">
+                                    <div class="skill-level" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="skill">
+                                <span>JavaScript</span>
+                                <div class="skill-bar">
+                                    <div class="skill-level" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill">
+                                <span>设计</span>
+                                <div class="skill-bar">
+                                    <div class="skill-level" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品集部分 -->
+    <section id="portfolio" class="section">
+        <div class="card">
+            <h2>作品集</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <!-- 项目1照片已删除 -->
+                    <div class="portfolio-overlay">
+                        <h3>项目1</h3>
+                        <p>项目描述</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <!-- 项目2照片已删除 -->
+                    <div class="portfolio-overlay">
+                        <h3>项目2</h3>
+                        <p>项目描述</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <!-- 项目3照片已删除 -->
+                    <div class="portfolio-overlay">
+                        <h3>项目3</h3>
+                        <p>项目描述</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <!-- 项目4照片已删除 -->
+                    <div class="portfolio-overlay">
+                        <h3>项目4</h3>
+                        <p>项目描述</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 空间入口按钮 -->
+            <div class="secret-portal" style="text-align: center; margin-top: 20px;">
+                <button id="enter-secret-space" class="secret-btn">
+                    <i class="fas fa-rocket"></i> 
+                    <span class="secret-text">进入神秘空间</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI助手部分 -->
+    <section id="ai-assistant" class="section">
+        <div class="card">
+            <h2>AI助手</h2>
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            <p>你好！我是AI助手，有什么我可以帮助你的吗？</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <textarea id="user-input" placeholder="在这里输入你的问题..."></textarea>
+                    <button id="send-btn">发送</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系部分 -->
+    <section id="contact" class="section">
+        <div class="card">
+            <h2>联系我</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>2773522669@qq.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <p>+86 123 4567 8910</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>中国，某省某市</p>
+                    </div>
+                    <h3 class="social-title">关注我的社交媒体</h3>
+                    <p class="social-desc">点击图标访问我的社交媒体主页</p>
+                    <div class="social-links">
+                        <a href="https://weixin.qq.com/" target="_blank" class="social-link weixin" title="微信"><i class="fab fa-weixin"></i></a>
+                        <a href="https://weibo.com/" target="_blank" class="social-link weibo" title="微博"><i class="fab fa-weibo"></i></a>
+                        <a href="https://github.com/" target="_blank" class="social-link github" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/cn/" target="_blank" class="social-link linkedin" title="领英"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://space.bilibili.com/1027898947" target="_blank" class="social-link bilibili" title="哔哩哔哩"><i class="fab fa-bilibili"></i></a>
+                        <a href="https://www.douyin.com/" target="_blank" class="social-link douyin" title="抖音"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="您的邮箱" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" name="subject" placeholder="主题" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="您的留言" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">发送留言</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>&copy; 2023 小付的个人网页. 保留所有权利.</p>
+    </footer>
+
+    <!-- 在 body 底部添加神秘空间结构 -->
+    <div class="matrix-bg"></div>
+    <div class="secret-space">
+        <button class="close-btn">×</button>
+        <div class="password-section">
+            <div class="terminal-header">
+                <span class="terminal-title">访问验证</span>
+                <div class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </div>
+            </div>
+            <div class="terminal-window">
+                <div class="terminal-content">
+                    <div class="typing-text">请输入访问密码...</div>
+                    <div class="password-input-container">
+                        <span class="prompt">> </span>
+                        <input type="password" class="password-input" placeholder="_">
+                    </div>
+                    <button class="unlock-btn">验证</button>
+                    <p class="access-message"></p>
+                </div>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="text-space">文本空间</button>
+                <button class="tab-btn" data-tab="video-space">视频空间</button>
+                <button class="tab-btn" data-tab="audio-space">音频空间</button>
+            </div>
+
+            <!-- 文本空间 -->
+            <div id="text-space" class="secret-tab-content active">
+                <div class="text-editor">
+                    <div class="editor-toolbar">
+                        <button class="save-btn">保存</button>
+                        <button class="clear-btn">清除</button>
+                    </div>
+                    <textarea class="text-content" placeholder="在这里输入您的私密文字..."></textarea>
+                </div>
+            </div>
+
+            <!-- 视频空间 -->
+            <div id="video-space" class="secret-tab-content">
+                <div class="video-container">
+                    <div class="video-input-group">
+                        <input type="text" class="video-url" placeholder="输入视频链接...">
+                        <input type="text" class="video-title" placeholder="视频标题...">
+                        <button class="add-video">添加</button>
+                    </div>
+                    <div class="video-list"></div>
+                </div>
+            </div>
+
+            <!-- 音频空间 -->
+            <div id="audio-space" class="secret-tab-content">
+                <div class="audio-container">
+                    <div class="audio-input-group">
+                        <input type="text" class="audio-url" placeholder="输入音频链接...">
+                        <input type="text" class="audio-title" placeholder="音频标题...">
+                        <button class="add-audio">添加</button>
+                    </div>
+                    <div class="audio-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 轮播图功能
+        let leftSlideIndex = 1;
+        let rightSlideIndex = 1;
+        
+        // 显示初始幻灯片
+        showSideSlides(leftSlideIndex, 'left');
+        showSideSlides(rightSlideIndex, 'right');
+        
+        // 自动轮播
+        setInterval(function() {
+            leftSlideIndex++;
+            if (leftSlideIndex > 3) leftSlideIndex = 1;
+            showSideSlides(leftSlideIndex, 'left');
+            
+            rightSlideIndex++;
+            if (rightSlideIndex > 3) rightSlideIndex = 1;
+            showSideSlides(rightSlideIndex, 'right');
+        }, 5000);
+        
+        // 显示指定的幻灯片
+        function showSideSlides(n, side) {
+            let i;
+            let slides = document.getElementsByClassName(side + "-slides");
+            let dots = document.getElementsByClassName(side + "-dot");
+            
+            if (n > slides.length) {
+                if (side === 'left') {
+                    leftSlideIndex = 1;
+                } else {
+                    rightSlideIndex = 1;
+                }
+                n = 1;
+            }
+            
+            if (n < 1) {
+                if (side === 'left') {
+                    leftSlideIndex = slides.length;
+                } else {
+                    rightSlideIndex = slides.length;
+                }
+                n = slides.length;
+            }
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            
+            slides[n-1].style.display = "block";
+            dots[n-1].className += " active";
+        }
+        
+        // 点击圆点切换幻灯片
+        function currentSideSlide(n, side) {
+            if (side === 'left') {
+                leftSlideIndex = n;
+            } else {
+                rightSlideIndex = n;
+            }
+            showSideSlides(n, side);
+        }
+
+        // AI聊天功能
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        
+        // 目标链接
+        const targetUrl = "https://chat.deepseek.com/a/chat/s/0d51360a-f5de-459f-ad6c-4d8dfdcf37e5";
+        
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    // 显示用户消息
+                    const userMessageDiv = document.createElement('div');
+                    userMessageDiv.className = 'message user-message';
+                    userMessageDiv.innerHTML = `
+                        <div class="message-content">
+                            <p>${message}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(userMessageDiv);
+                    
+                    // 滚动到底部
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // 延迟一小段时间后跳转，让用户看到自己的消息
+                    setTimeout(function() {
+                        // 将用户输入的内容编码，以便安全地传递
+                        const encodedMessage = encodeURIComponent(message);
+                        
+                        // 跳转到目标链接，尝试将消息作为参数传递
+                        // 注意：目标网站需要支持接收此参数
+                        window.open(`${targetUrl}?message=${encodedMessage}`, '_blank');
+                    }, 500);
+                }
+            });
+        }
+        
+        if (userInput) {
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
+        }
+
+        // 神秘空间功能
+        document.getElementById('enter-secret-space').addEventListener('click', function() {
+            document.querySelector('.matrix-bg').style.display = 'block';
+            document.querySelector('.secret-space').style.display = 'block';
+            setTimeout(() => {
+                document.querySelector('.matrix-bg').style.opacity = '0.8';
+                document.querySelector('.secret-space').style.display = 'block';
+                document.querySelector('.typing-text').style.display = 'block';
+            }, 100);
+        });
+        
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.querySelector('.matrix-bg').style.opacity = '0';
+            document.querySelector('.secret-space').style.display = 'none';
+            setTimeout(() => {
+                document.querySelector('.matrix-bg').style.display = 'none';
+            }, 500);
+        });
+        
+        // 密码验证
+        document.querySelector('.unlock-btn').addEventListener('click', function() {
+            const password = document.querySelector('.password-input').value;
+            if (password === '245104037') {
+                document.querySelector('.password-section').style.display = 'none';
+                document.querySelector('.content-area').style.display = 'block';
+                localStorage.setItem('secretSpaceUnlocked', 'true');
+            } else {
+                document.querySelector('.access-message').textContent = '密码错误！';
+                document.querySelector('.secret-space').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.secret-space').classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        // 标签页切换
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // 移除所有标签页的激活状态
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.secret-tab-content').forEach(content => content.classList.remove('active'));
+                
+                // 激活当前标签页
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // 文本空间功能
+        const textContent = document.querySelector('.text-content');
+        
+        document.querySelector('.save-btn').addEventListener('click', function() {
+            localStorage.setItem('secretText', textContent.value);
+            alert('内容已保存！');
+        });
+
+        document.querySelector('.clear-btn').addEventListener('click', function() {
+            textContent.value = '';
+            localStorage.removeItem('secretText');
+        });
+
+        // 加载保存的文本
+        if (localStorage.getItem('secretText')) {
+            textContent.value = localStorage.getItem('secretText');
+        }
+
+        // 视频空间功能
+        document.querySelector('.add-video').addEventListener('click', function() {
+            const url = document.querySelector('.video-url').value;
+            const title = document.querySelector('.video-title').value;
+            
+            if (url && title) {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <h3>${title}</h3>
+                    <a href="${url}" target="_blank">${url}</a>
+                    <button class="delete-video">删除</button>
+                `;
+                document.querySelector('.video-list').appendChild(videoItem);
+                
+                // 清空输入框
+                document.querySelector('.video-url').value = '';
+                document.querySelector('.video-title').value = '';
+                
+                // 保存到本地存储
+                saveVideos();
+            }
+        });
+
+        // 音频空间功能
+        document.querySelector('.add-audio').addEventListener('click', function() {
+            const url = document.querySelector('.audio-url').value;
+            const title = document.querySelector('.audio-title').value;
+            
+            if (url && title) {
+                const audioItem = document.createElement('div');
+                audioItem.className = 'audio-item';
+                audioItem.innerHTML = `
+                    <h3>${title}</h3>
+                    <a href="${url}" target="_blank">${url}</a>
+                    <button class="delete-audio">删除</button>
+                `;
+                document.querySelector('.audio-list').appendChild(audioItem);
+                
+                // 清空输入框
+                document.querySelector('.audio-url').value = '';
+                document.querySelector('.audio-title').value = '';
+                
+                // 保存到本地存储
+                saveAudios();
+            }
+        });
+
+        // 保存视频列表
+        function saveVideos() {
+            const videos = [];
+            document.querySelectorAll('.video-item').forEach(item => {
+                videos.push({
+                    title: item.querySelector('h3').textContent,
+                    url: item.querySelector('a').href
+                });
+            });
+            localStorage.setItem('secretVideos', JSON.stringify(videos));
+        }
+
+        // 保存音频列表
+        function saveAudios() {
+            const audios = [];
+            document.querySelectorAll('.audio-item').forEach(item => {
+                audios.push({
+                    title: item.querySelector('h3').textContent,
+                    url: item.querySelector('a').href
+                });
+            });
+            localStorage.setItem('secretAudios', JSON.stringify(audios));
+        }
+
+        // 加载保存的视频和音频
+        function loadSavedMedia() {
+            // 加载视频
+            const savedVideos = JSON.parse(localStorage.getItem('secretVideos') || '[]');
+            savedVideos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <h3>${video.title}</h3>
+                    <a href="${video.url}" target="_blank">${video.url}</a>
+                    <button class="delete-video">删除</button>
+                `;
+                document.querySelector('.video-list').appendChild(videoItem);
+            });
+
+            // 加载音频
+            const savedAudios = JSON.parse(localStorage.getItem('secretAudios') || '[]');
+            savedAudios.forEach(audio => {
+                const audioItem = document.createElement('div');
+                audioItem.className = 'audio-item';
+                audioItem.innerHTML = `
+                    <h3>${audio.title}</h3>
+                    <a href="${audio.url}" target="_blank">${audio.url}</a>
+                    <button class="delete-audio">删除</button>
+                `;
+                document.querySelector('.audio-list').appendChild(audioItem);
+            });
+        }
+
+        // 页面加载时初始化
+        loadSavedMedia();
+    </script>
+</body>
+</html> 
